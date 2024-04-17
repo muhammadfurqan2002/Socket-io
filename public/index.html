@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+</head>
+<style>
+    #title-bar {
+        height: 30px;
+        background-color: #f0f0f0;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+    }
+
+    #form {
+        display: flex;
+        width: 100%;
+    }
+
+    #msg {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    #msg:focus {
+        background-color: #eee;
+    }
+
+    button {
+        border: none;
+        background-color: #ddd;
+        color: #333;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    #messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        max-height: 300px;
+    }
+
+    #messages li {
+        background-color: #f2f2f2;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+</style>
+
+<body>
+
+    <h1>Chat 2.0</h1>
+
+    <div id="title-bar">
+        <form action="" id="form">
+            <input type="text" name="message" id="msg" placeholder="Enter message">
+            <button>send</button>
+        </form>
+    </div>
+    <br>
+    <ul id="messages"></ul>
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        var socket = io();
+        var txt = document.getElementById("msg");
+        var messages = document.getElementById("messages");
+        var bt = document.getElementById("form");
+
+        bt.addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (txt.value) {
+                socket.emit("chat message", txt.value);
+                txt.value = '';
+            }
+
+        });
+
+        socket.on("chat message", (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+        })
+
+    </script>
+
+</body>
+
+</html>
